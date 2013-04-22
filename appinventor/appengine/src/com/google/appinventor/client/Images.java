@@ -374,4 +374,10 @@ public interface Images extends Resources {
    */
   @Source("com/google/appinventor/images/web.png")
   ImageResource web();
+
+  /**
+   * Designer palette item: Musical Instrument Component
+   */
+  @Source("com/google/appinventor/images/musicalInstrument.png")
+  ImageResource musicalInstrument();
 }

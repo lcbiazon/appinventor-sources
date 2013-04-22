@@ -608,5 +608,7 @@ public class YaVersion {
   // For WEBVIEWER_COMPONENT_VERSION 3:
   // - Add UsesLocation property to set location permissions
   public static final int WEBVIEWER_COMPONENT_VERSION = 3;
+  
+  public static final int MUSICALINSTRUMENT_COMPONENT_VERSION = 1;
 
 }

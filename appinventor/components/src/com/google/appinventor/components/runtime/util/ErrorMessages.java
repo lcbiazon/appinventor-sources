@@ -134,6 +134,8 @@ public final class ErrorMessages {
   public static final int ERROR_BAD_VALUE_FOR_TEXT_RECEIVING = 1701;
   
   // Please start the next group of error numbers at 1801.
+  // MusicaInstrument errors
+  public static final int ERROR_MUSICALINSTRUMENT = 1801;
 
   // Mapping of error numbers to error message format strings.
   private static final Map<Integer, String> errorMessages;
@@ -355,6 +357,9 @@ public final class ErrorMessages {
     // Texting errors
     errorMessages.put(ERROR_BAD_VALUE_FOR_TEXT_RECEIVING,
       "Text Receiving should be either 1, 2 or 3.");
+    // MusicalInstrument errors
+    errorMessages.put(ERROR_MUSICALINSTRUMENT,
+      "Sorry but no: %s");
   }
 
   private ErrorMessages() {
