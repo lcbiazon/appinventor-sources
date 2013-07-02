@@ -5,9 +5,15 @@
 
 package com.google.appinventor.components.runtime;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.puredata.android.io.AudioParameters;
+import org.puredata.android.io.PdAudio;
+import org.puredata.android.utils.PdUiDispatcher;
+import org.puredata.core.PdBase;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,13 +46,15 @@ import com.google.appinventor.components.runtime.util.ErrorMessages;
     + "with <a href=\"http://libpd.cc\" target=\"_blank\">libpd</a>. </p>", category = ComponentCategory.MEDIA, nonVisible = true, iconName = "images/musicalInstrument.png")
 @SimpleObject
 // @UsesPermissions(permissionNames = "android.permission.INTERNET")
-// @UsesLibraries(libraries = "libpd.jar")
+@UsesLibraries(libraries = "pdcore.jar")
 public final class MusicalInstrument extends AndroidNonvisibleComponent {
 
   // the following fields should only be accessed from the UI thread
   private String helloComponent = "";
   private final SharedPreferences sharedPreferences;
   private final ComponentContainer container;
+
+  private PdUiDispatcher dispatcher;
 
   public MusicalInstrument(ComponentContainer container) {
     super(container.$form());
@@ -68,7 +76,7 @@ public final class MusicalInstrument extends AndroidNonvisibleComponent {
    * helloComponent property setter method.
    * 
    * @param helloComponent
-   *          simple paramenter for testing
+   *          simple parameter for testing
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "")
   @SimpleProperty
@@ -77,12 +85,39 @@ public final class MusicalInstrument extends AndroidNonvisibleComponent {
   }
 
   /**
-   * Check whether App Inventor is nice or not
+   * Starts pure data engine
    */
-  @SimpleFunction(description = "Can I Has it plz?")
-  public void CanIHasFunction() {
-    final String myHelloComponent = helloComponent;
-    form.dispatchErrorOccurredEvent(this, "CanIHasFunction",
-    		    ErrorMessages.ERROR_MUSICALINSTRUMENT, myHelloComponent);
+  @SimpleFunction(description = "Starts pure data engine")
+  public void initPd() {
+    try {
+      // configure the audio glue
+      int sampleRate = AudioParameters.suggestSampleRate();
+      PdAudio.initAudio(sampleRate, 0, 2, 8, true);
+      
+      // create and install the dispatcher
+      dispatcher = new PdUiDispatcher();
+      PdBase.setReceiver(dispatcher);
+      
+      form.dispatchErrorOccurredEvent(this, "initPd",
+          ErrorMessages.ERROR_MUSICALINSTRUMENT, String.valueOf(sampleRate));
+      
+    } catch (IOException e) {
+        form.dispatchErrorOccurredEvent(this, "initPd",
+            ErrorMessages.ERROR_MUSICALINSTRUMENT, "FUUUUU");
+    }
+  }
+  
+  @SimpleFunction(description = "Checks if pd engine is running") 
+  public void isPdRunning() {
+    final String isRunning = String.valueOf(PdAudio.isRunning());
+    form.dispatchErrorOccurredEvent(this, "isPdRunning",
+        ErrorMessages.ERROR_MUSICALINSTRUMENT, isRunning);
+  }
+  
+  @SimpleFunction(description = "Shows sample rate") 
+  public void showSampleRate() {
+    final String sampleRate = String.valueOf(AudioParameters.suggestSampleRate());
+    form.dispatchErrorOccurredEvent(this, "showSampleRate",
+        ErrorMessages.ERROR_MUSICALINSTRUMENT, sampleRate);
   }
 }
